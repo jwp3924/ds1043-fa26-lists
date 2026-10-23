@@ -2,9 +2,9 @@
 
 Exercises for exploring lists
 """
-
+import os
+import stat
 from pathlib import Path
-
 
 def clamp(a: list[int], low: int = 0, high: int = 10) -> None:
     """Modify the values of a to be `low` when they fall below `low` or `high` when the fall above `high`"""
@@ -46,6 +46,7 @@ print(letterlist)
 #   The call will print '{name} hops into their mother's pouch' each time.
 #
 # Now run this in the console. Was your prediction correct?
+#   My prediction was wrong. The list of siblings remains from call to call.
 def hop_in(name: str, pouch: list[str] = []) -> None:
     if len(pouch) > 0:
         siblings = f' with their siblings: {", ".join(pouch)}'
@@ -54,6 +55,9 @@ def hop_in(name: str, pouch: list[str] = []) -> None:
     print(f"{name} hops into their mother's pouch{siblings}")
     pouch.append(name)
 
+hop_in('James')
+hop_in('Adam')
+hop_in('Jenny')
 
 # You can point this function a folder on your computer and it will list
 # all the files in it and any subfolders. Experiment with how `items` is
@@ -62,15 +66,27 @@ def list_files(folder: str) -> list[str]:
     """Create a list of all files under `root`"""
     root = Path(folder)
     filenames: list[str] = []
-    items: list[Path] = []
+    items: list[Path] = root.iterdir()
     while len(items) > 0:
         # item =  from `items` here
+        item = items.pop(len(items)-1)
         if item.is_dir():  # if the item is a folder...
             # add the contents of item.iterdir() to items
+            items.append(item.iterdir())
         else:
             # add item.name to filenames
+            filenames.append(item.name)
     return filenames
 
+filepath = 'Example Folder'
+if os.path.exists(filepath):
+    print('found')
+try:
+    os.chmod(filepath, stat.S_IREAD)
+except PermissionError:
+    print('didn\'t work')
+with open(filepath, 'r') as folder:
+    print(Path(folder))
 
 # Implement this function using a list as a stack to find matching parentheses
 # if a match is not found, raise a ValueError with a helpful message (like the
