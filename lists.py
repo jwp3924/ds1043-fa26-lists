@@ -15,11 +15,6 @@ def clamp(a: list[int], low: int = 0, high: int = 10) -> None:
             a[i] = 'high'
     return None
 
-numlist = [-5,2,7,-3,12,19]
-print(numlist)
-clamp(numlist)
-print(numlist)
-
 # Try writing your own reverse function by actually moving values around rather than
 # using reversed, list.reverse, a[::-1], etc
 def reverse(a: list) -> None:
@@ -30,11 +25,6 @@ def reverse(a: list) -> None:
     for j in range(len(a)):
         a[j] = reversed_list[j]
     return None
-
-letterlist = ['a','b','c','d','e']
-print(letterlist)
-reverse(letterlist)
-print(letterlist)
 
 # Read the following function and write out your prediction of what it will do
 # in the following situations:
@@ -62,36 +52,41 @@ hop_in('Jenny')
 # You can point this function a folder on your computer and it will list
 # all the files in it and any subfolders. Experiment with how `items` is
 # built (Stack vs Queue) and see how the ordering changes.
-def list_files(folder: str) -> list[str]:
-    """Create a list of all files under `root`"""
-    root = Path(folder)
+def list_files(folder_path: str) -> list[str]:
+    """Create a list of all files under `root`. Must be given an absolute path as an argument."""
     filenames: list[str] = []
-    items: list[Path] = root.iterdir()
+    items = []
+    paths = []
+    for object in os.listdir(folder_path):
+        paths.append(folder_path + '\\' + object)
+        items.append(object)
     while len(items) > 0:
         # item =  from `items` here
         item = items.pop(len(items)-1)
-        if item.is_dir():  # if the item is a folder...
+        path = paths.pop(len(paths)-1)
+        if os.path.isdir(path):  # if the item is a folder...
             # add the contents of item.iterdir() to items
-            items.append(item.iterdir())
+            for thing in os.listdir(path):
+                paths.append(path + '\\' + thing)
+                items.append(thing)
         else:
             # add item.name to filenames
-            filenames.append(item.name)
+            filenames.append(item)
     return filenames
-
-filepath = 'Example Folder'
-if os.path.exists(filepath):
-    print('found')
-try:
-    os.chmod(filepath, stat.S_IREAD)
-except PermissionError:
-    print('didn\'t work')
-with open(filepath, 'r') as folder:
-    print(Path(folder))
 
 # Implement this function using a list as a stack to find matching parentheses
 # if a match is not found, raise a ValueError with a helpful message (like the
 # index of the unmatched parenthesis)
 def match_parentheses(line: str) -> list[str]:
     """Given a string containing an expression, return a list of subexpressions delineated by parenthesis"""
+    in_subexpression = False
+    subexpression = ''
+    subexpressions = []
+    for character in line:
+        if in_subexpression == False:
+            if character == '(':
+                in_subexpression = True
+            elif character == ')':
+                raise ValueError
     return [line]
 
