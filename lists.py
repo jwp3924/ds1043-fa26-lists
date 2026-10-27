@@ -82,11 +82,21 @@ def match_parentheses(line: str) -> list[str]:
     in_subexpression = False
     subexpression = ''
     subexpressions = []
-    for character in line:
+    for i in range(len(line)):
         if in_subexpression == False:
-            if character == '(':
+            if line[i] == '(':
                 in_subexpression = True
-            elif character == ')':
-                raise ValueError
-    return [line]
-
+            elif line[i] == ')':
+                raise ValueError('Unmatched parenthesis at index ' + str(i))
+        else:
+            if line[i] == '(':
+                raise ValueError('Unmatched parenthesis at index ' + str(i))
+            elif line[i] == ')':
+                in_subexpression = False
+                subexpressions.append(subexpression)
+                subexpression = ''
+            else:
+                subexpression = subexpression + line[i]
+    if in_subexpression == True:
+        raise ValueError('No closing parenthesis')
+    return subexpressions
